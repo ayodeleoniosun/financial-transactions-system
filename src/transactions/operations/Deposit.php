@@ -1,8 +1,10 @@
 <?php
 
-namespace Financial\Transactions\Transactions;
+namespace Financial\Transactions\Transactions\Operations;
 
 use Financial\Transactions\Enums\TransactionEnum;
+use Financial\Transactions\Transactions\BaseTransaction;
+use Financial\Transactions\Transactions\TransactionCalculator;
 
 class Deposit extends BaseTransaction
 {

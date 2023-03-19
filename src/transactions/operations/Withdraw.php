@@ -1,17 +1,19 @@
 <?php
 
-namespace Financial\Transactions\Transactions;
+namespace Financial\Transactions\Transactions\Operations;
 
 use Exception;
 use Financial\Transactions\Enums\TransactionEnum;
+use Financial\Transactions\Transactions\BaseTransaction;
+use Financial\Transactions\Transactions\TransactionCalculator;
 
-class Transfer extends BaseTransaction
+class Withdraw extends BaseTransaction
 {
-    protected string $type = TransactionEnum::TRANSFER;
+    protected string $type = TransactionEnum::WITHDRAW;
 
-    public function __construct(int $accountNumber, float $amount, string $comment, string $dueDate, int $recipient)
+    public function __construct(int $accountNumber, float $amount, string $comment, string $dueDate)
     {
-        parent::__construct($accountNumber, $this->type, $amount, $comment, $dueDate, $recipient);
+        parent::__construct($accountNumber, $this->type, $amount, $comment, $dueDate);
     }
 
     /**
@@ -30,8 +32,7 @@ class Transfer extends BaseTransaction
             $this->getType(),
             $this->getAmount(),
             $this->getComment(),
-            $this->getDueDate(),
-            $this->getRecipient()
+            $this->getDueDate()
         );
     }
 }
