@@ -8,9 +8,9 @@ class TransactionCalculator
 {
     private array $transactions;
 
-    public function addTransaction(int $accountNumber, string $type, float $amount, string $comment, string $dueDate): void
+    public function addTransaction(int $accountNumber, string $type, float $amount, string $comment, string $dueDate, int|null $recipient = null): void
     {
-        $this->transactions[] = (object)compact('accountNumber', 'type', 'amount', 'comment', 'dueDate');
+        $this->transactions[] = (object)compact('accountNumber', 'type', 'amount', 'comment', 'dueDate', 'recipient');
     }
 
     public function getAccountBalance(int $accountNumber): float|int

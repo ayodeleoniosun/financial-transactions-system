@@ -7,6 +7,7 @@ require "vendor/autoload.php";
 use Financial\Transactions\Accounts\AccountManager;
 use Financial\Transactions\Transactions\Deposit;
 use Financial\Transactions\Transactions\TransactionCalculator;
+use Financial\Transactions\Transactions\Transfer;
 use Financial\Transactions\Transactions\Withdraw;
 
 // create new account
@@ -59,6 +60,24 @@ $withdraw = new Withdraw($getAccount->number, 2000, 'This is a new withdrawal', 
 
 try {
     $withdraw->handle($transactionCalculator);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+
+//transfer to another account
+
+$transfer = new Transfer($getAccount->number, 1000, 'This is a new transfer to ' . $allAccounts[0]->number, date('Y-m-d'), $allAccounts[0]->number);
+
+try {
+    $transfer->handle($transactionCalculator);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+
+$transfer = new Transfer($getAccount->number, 100, 'This is a new transfer to ' . $allAccounts[0]->number, date('Y-m-d'), $allAccounts[0]->number);
+
+try {
+    $transfer->handle($transactionCalculator);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }

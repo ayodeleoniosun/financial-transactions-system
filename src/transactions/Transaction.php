@@ -9,21 +9,24 @@ abstract class Transaction
     protected string $comment;
     protected string $dueDate;
     protected int $accountNumber;
+    protected int|null $recipient;
 
     /**
+     * @param int $accountNumber
      * @param string $type
      * @param float $amount
      * @param string $comment
      * @param string $dueDate
-     * @param int $accountNumber
+     * @param int|null $recipient
      */
-    public function __construct(int $accountNumber, string $type, float $amount, string $comment, string $dueDate)
+    public function __construct(int $accountNumber, string $type, float $amount, string $comment, string $dueDate, int|null $recipient = null)
     {
         $this->accountNumber = $accountNumber;
         $this->type = $type;
         $this->amount = $amount;
         $this->comment = $comment;
         $this->dueDate = $dueDate;
+        $this->recipient = $recipient;
     }
 
     public function getType(): string
@@ -49,6 +52,11 @@ abstract class Transaction
     public function getAccountNumber(): int
     {
         return $this->accountNumber;
+    }
+
+    public function getRecipient(): int|null
+    {
+        return $this->recipient;
     }
 
     abstract public function handle(TransactionCalculator $transactionCalculator);
