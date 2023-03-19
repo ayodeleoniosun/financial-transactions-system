@@ -18,11 +18,11 @@ $accountManager = AccountManager::getInstance();
 
 $accountManager->createAccount('John Doe');
 $accountManager->createAccount('Nameless User');
-$account = $accountManager->createAccount('Ayodele Oniosun');
+$newAccount = $accountManager->createAccount('Ayodele Oniosun');
 
 // get single account
 try {
-    $getAccount = $accountManager->getAccount($account->number);
+    $getAccount = $accountManager->getAccount($newAccount->number);
     //var_dump($getAccount);
 } catch (\Exception $e) {
     echo $e->getMessage();
@@ -38,7 +38,7 @@ $allAccounts = $accountManager->getAllAccounts();
 
 // deposit to an account
 
-$account = new Account();
+$account = new Account($getAccount->number);
 
 $deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 2000, 'This is the first deposit', date("Y-m-d H:i:s"));
 $deposit->handle($account);
@@ -95,7 +95,7 @@ try {
 
 //filter transactions by due date
 
-$accountTransactions = $account->getAccountTransactions($getAccount->number);
+$accountTransactions = $account->getAccountTransactions();
 $filterTransaction = new FilterTransactions($accountTransactions);
 
 $filterTransactionsByDueDate = $filterTransaction->filterTransactionsByDueDate();

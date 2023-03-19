@@ -8,9 +8,12 @@ class Account
 {
     private array $transactions;
 
-    public function __construct()
+    private int $accountNumber;
+
+    public function __construct(int $accountNumber)
     {
         $this->transactions = [];
+        $this->accountNumber = $accountNumber;
     }
 
     public function createTransaction($payload): void
@@ -18,41 +21,41 @@ class Account
         $this->transactions[] = (object)$payload;
     }
 
-    public function getAccountBalance(int $accountNumber): float|int
+    public function getAccountBalance(): float|int
     {
-        $deposits = array_sum(array_column($this->getDepositTransactions($accountNumber), 'amount'));
-        $withdrawals = array_sum(array_column($this->getWithdrawalTransactions($accountNumber), 'amount'));
-        $transfers = array_sum(array_column($this->getTransferTransactions($accountNumber), 'amount'));
+        $deposits = array_sum(array_column($this->getDepositTransactions(), 'amount'));
+        $withdrawals = array_sum(array_column($this->getWithdrawalTransactions(), 'amount'));
+        $transfers = array_sum(array_column($this->getTransferTransactions(), 'amount'));
 
         return $deposits - ($withdrawals + $transfers);
     }
 
-    public function getDepositTransactions(int $accountNumber): array
+    public function getDepositTransactions(): array
     {
-        return $this->getTransactionsByType($accountNumber, TransactionEnum::DEPOSIT);
+        return $this->getTransactionsByType(TransactionEnum::DEPOSIT);
     }
 
-    public function getTransactionsByType(int $accountNumber, string $type): array
+    public function getTransactionsByType(string $type): array
     {
-        return array_values(array_filter($this->transactions, function ($transaction) use ($accountNumber, $type) {
-            return $transaction->accountNumber === $accountNumber && $transaction->type === $type;
+        return array_values(array_filter($this->transactions, function ($transaction) use ($type) {
+            return $transaction->accountNumber === $this->accountNumber && $transaction->type === $type;
         }));
     }
 
-    public function getWithdrawalTransactions(int $accountNumber): array
+    public function getWithdrawalTransactions(): array
     {
-        return $this->getTransactionsByType($accountNumber, TransactionEnum::WITHDRAW);
+        return $this->getTransactionsByType(TransactionEnum::WITHDRAW);
     }
 
-    public function getTransferTransactions(int $accountNumber): array
+    public function getTransferTransactions(): array
     {
-        return $this->getTransactionsByType($accountNumber, TransactionEnum::TRANSFER);
+        return $this->getTransactionsByType(TransactionEnum::TRANSFER);
     }
 
-    public function getAccountTransactions(int $accountNumber): array
+    public function getAccountTransactions(): array
     {
-        return array_values(array_filter($this->transactions, function ($transaction) use ($accountNumber) {
-            return $transaction->accountNumber === $accountNumber;
+        return array_values(array_filter($this->transactions, function ($transaction) {
+            return $transaction->accountNumber === $this->accountNumber;
         }));
     }
 

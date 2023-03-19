@@ -22,7 +22,7 @@ class Withdraw extends BaseTransaction
      */
     public function handle(Account $account): void
     {
-        $accountBalance = $account->getAccountBalance($this->getAccountNumber());
+        $accountBalance = $account->getAccountBalance();
 
         if ($accountBalance < $this->getAmount()) {
             throw new Exception("Insufficient fund");
