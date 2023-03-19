@@ -6,6 +6,8 @@ require "vendor/autoload.php";
 
 use Financial\Transactions\Accounts\Account;
 use Financial\Transactions\Accounts\AccountManager;
+use Financial\Transactions\Enums\FilterTransactionEnum;
+use Financial\Transactions\Transactions\FilterTransactions;
 use Financial\Transactions\Transactions\Operations\Deposit;
 use Financial\Transactions\Transactions\Operations\Transfer;
 use Financial\Transactions\Transactions\Operations\Withdraw;
@@ -38,21 +40,23 @@ $allAccounts = $accountManager->getAllAccounts();
 
 $account = new Account();
 
-$deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 2000, 'This is a new deposit', date('Y-m-d'));
+$deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 2000, 'This is the first deposit', date("Y-m-d H:i:s"));
 $deposit->handle($account);
 
-$deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 3000, 'This is a new deposit', date('Y-m-d'));
+$deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 3000, 'This is the second deposit', date("Y-m-d H:i:s"));
 $deposit->handle($account);
 
-$deposit = TransactionFactory::create(Deposit::class, $allAccounts[0]->number, 4000, 'This is a new deposit', date('Y-m-d'));
+$deposit = TransactionFactory::create(Deposit::class, $allAccounts[0]->number, 4000, 'This is the third deposit', date("Y-m-d H:i:s"));
 $deposit->handle($account);
 
-$deposit = TransactionFactory::create(Deposit::class, $allAccounts[0]->number, 5000, 'This is a new deposit', date('Y-m-d'));
+$deposit = TransactionFactory::create(Deposit::class, $allAccounts[0]->number, 5000, 'This is the fourth deposit', date("Y-m-d H:i:s"));
 $deposit->handle($account);
 
 //withdraw from an account
 
-$withdraw = TransactionFactory::create(Withdraw::class, $getAccount->number, 1000, 'This is a new withdrawal', date('Y-m-d'));
+sleep(2);
+
+$withdraw = TransactionFactory::create(Withdraw::class, $getAccount->number, 1000, 'This is the first withdrawal', date("Y-m-d H:i:s"));
 
 try {
     $withdraw->handle($account);
@@ -60,7 +64,7 @@ try {
     echo $e->getMessage();
 }
 
-$withdraw = TransactionFactory::create(Withdraw::class, $getAccount->number, 500, 'This is a new withdrawal', date('Y-m-d'));
+$withdraw = TransactionFactory::create(Withdraw::class, $getAccount->number, 500, 'This is the second withdrawal', date("Y-m-d H:i:s"));
 
 try {
     $withdraw->handle($account);
@@ -70,16 +74,9 @@ try {
 
 
 //transfer to another account
+sleep(2);
 
-$transfer = TransactionFactory::create(Transfer::class, $getAccount->number, 2000, 'This is a new transfer to ' . $allAccounts[0]->number, date('Y-m-d'), $allAccounts[0]->number);
-
-try {
-    $transfer->handle($account);
-} catch (\Exception $e) {
-    echo $e->getMessage();
-}
-
-$transfer = TransactionFactory::create(Transfer::class, $getAccount->number, 2000, 'This is a new transfer to ' . $allAccounts[0]->number, date('Y-m-d'), $allAccounts[0]->number);
+$transfer = TransactionFactory::create(Transfer::class, $getAccount->number, 2000, 'This is a new transfer to ' . $allAccounts[0]->number, date("Y-m-d H:i:s"), $allAccounts[0]->number);
 
 try {
     $transfer->handle($account);
@@ -87,3 +84,27 @@ try {
     echo $e->getMessage();
 }
 
+$transfer = TransactionFactory::create(Transfer::class, $getAccount->number, 2000, 'This is a new transfer to ' . $allAccounts[1]->number, date("Y-m-d H:i:s"), $allAccounts[0]->number);
+
+try {
+    $transfer->handle($account);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+
+
+//filter transactions by due date
+
+$accountTransactions = $account->getAccountTransactions($getAccount->number);
+$filterTransaction = new FilterTransactions($accountTransactions);
+
+$filterTransactionsByDueDate = $filterTransaction->filterTransactionsByDueDate();
+$filterTransactionsByDueDateDesc = $filterTransaction->filterTransactionsByDueDate(FilterTransactionEnum::DESCENDING);
+//var_dump($filterTransactionsByDueDateDesc);
+
+
+//filter transactions by comments
+
+$filterTransactionsByComment = $filterTransaction->filterTransactionsByComment();
+$filterTransactionsByCommentDesc = $filterTransaction->filterTransactionsByComment(FilterTransactionEnum::DESCENDING);
+var_dump($filterTransactionsByCommentDesc);

@@ -8,6 +8,11 @@ class Account
 {
     private array $transactions;
 
+    public function __construct()
+    {
+        $this->transactions = [];
+    }
+
     public function addTransaction(int $accountNumber, string $type, float $amount, string $comment, string $dueDate, int|null $recipient = null): void
     {
         $this->transactions[] = (object)compact('accountNumber', 'type', 'amount', 'comment', 'dueDate', 'recipient');
@@ -50,4 +55,5 @@ class Account
             return $transaction->accountNumber === $accountNumber;
         }));
     }
+
 }
