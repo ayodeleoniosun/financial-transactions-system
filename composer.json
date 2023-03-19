@@ -1,40 +1,40 @@
 {
-    "name": "financial/transactions_system",
-    "description": "A financial transactions system",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Ayodele Oniosun",
-            "email": "ayodeleoniosun63@gmail.com",
-            "homepage": "https://github.com/ayodeleoniosun"
-        }
-    ],
-    "keywords": [
-        "transactions",
-        "banking",
-        "finance",
-        "php"
-    ],
-    "homepage": "https://github.com/ayodeleoniosun/financial-transactions-system",
-    "type": "project",
-    "require": {
-        "php": "^8.1"
-    },
-    "require-dev": {
-        "phpstan/phpstan": "^1.10",
-        "squizlabs/php_codesniffer": "3.*",
-        "friendsofphp/php-cs-fixer": "^3.15",
-        "phpunit/phpunit": "^10.0",
-        "fakerphp/faker": "^1.9.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Fiancial\\Transactions\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Fiancial\\Transactions\\Tests\\": "tests/"
-        }
+  "name": "financial/transactions_system",
+  "description": "A financial transactions system",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ayodele Oniosun",
+      "email": "ayodeleoniosun63@gmail.com",
+      "homepage": "https://github.com/ayodeleoniosun"
     }
+  ],
+  "keywords": [
+    "transactions",
+    "banking",
+    "finance",
+    "php"
+  ],
+  "homepage": "https://github.com/ayodeleoniosun/financial-transactions-system",
+  "type": "project",
+  "require": {
+    "php": "^8.1"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^1.10",
+    "squizlabs/php_codesniffer": "3.*",
+    "friendsofphp/php-cs-fixer": "^3.15",
+    "phpunit/phpunit": "^10.0",
+    "fakerphp/faker": "^1.9.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Financial\\Transactions\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Financial\\Transactions\\Tests\\": "tests/"
+    }
+  }
 }
