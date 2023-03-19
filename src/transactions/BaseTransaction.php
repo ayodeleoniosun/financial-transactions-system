@@ -31,6 +31,23 @@ abstract class BaseTransaction
         $this->recipient = $recipient;
     }
 
+    public function getPayload(): array
+    {
+        return [
+            'accountNumber' => $this->getAccountNumber(),
+            'type' => $this->getType(),
+            'amount' => $this->getAmount(),
+            'comment' => $this->getComment(),
+            'dueDate' => $this->getDueDate(),
+            'recipient' => $this->getRecipient()
+        ];
+    }
+
+    public function getAccountNumber(): int
+    {
+        return $this->accountNumber;
+    }
+
     public function getType(): string
     {
         return $this->type;
@@ -49,11 +66,6 @@ abstract class BaseTransaction
     public function getDueDate(): string
     {
         return $this->dueDate;
-    }
-
-    public function getAccountNumber(): int
-    {
-        return $this->accountNumber;
     }
 
     public function getRecipient(): int|null

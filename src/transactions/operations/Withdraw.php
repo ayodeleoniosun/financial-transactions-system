@@ -28,12 +28,6 @@ class Withdraw extends BaseTransaction
             throw new Exception("Insufficient fund");
         }
 
-        $account->addTransaction(
-            $this->getAccountNumber(),
-            $this->getType(),
-            $this->getAmount(),
-            $this->getComment(),
-            $this->getDueDate()
-        );
+        $account->createTransaction($this->getPayload());
     }
 }

@@ -17,12 +17,6 @@ class Deposit extends BaseTransaction
 
     public function handle(Account $account): void
     {
-        $account->addTransaction(
-            $this->getAccountNumber(),
-            $this->getType(),
-            $this->getAmount(),
-            $this->getComment(),
-            $this->getDueDate()
-        );
+        $account->createTransaction($this->getPayload());
     }
 }
