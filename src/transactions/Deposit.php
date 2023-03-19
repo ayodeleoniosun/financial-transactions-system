@@ -4,7 +4,7 @@ namespace Financial\Transactions\Transactions;
 
 use Financial\Transactions\Enums\TransactionEnum;
 
-class Deposit extends Transaction
+class Deposit extends BaseTransaction
 {
     protected string $type = TransactionEnum::DEPOSIT;
 

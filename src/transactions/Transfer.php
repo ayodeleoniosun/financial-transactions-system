@@ -5,7 +5,7 @@ namespace Financial\Transactions\Transactions;
 use Exception;
 use Financial\Transactions\Enums\TransactionEnum;
 
-class Transfer extends Transaction
+class Transfer extends BaseTransaction
 {
     protected string $type = TransactionEnum::TRANSFER;
 

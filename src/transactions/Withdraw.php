@@ -5,7 +5,7 @@ namespace Financial\Transactions\Transactions;
 use Exception;
 use Financial\Transactions\Enums\TransactionEnum;
 
-class Withdraw extends Transaction
+class Withdraw extends BaseTransaction
 {
     protected string $type = TransactionEnum::WITHDRAW;
 

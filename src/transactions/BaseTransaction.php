@@ -2,7 +2,7 @@
 
 namespace Financial\Transactions\Transactions;
 
-abstract class Transaction
+abstract class BaseTransaction
 {
     protected string $type;
     protected float $amount;
