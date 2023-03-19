@@ -3,6 +3,7 @@
 namespace Financial\Transactions\Transactions\Operations;
 
 use Exception;
+use Financial\Transactions\Accounts\Account;
 use Financial\Transactions\Enums\TransactionEnum;
 use Financial\Transactions\Transactions\BaseTransaction;
 use Financial\Transactions\Transactions\TransactionCalculator;
@@ -19,15 +20,15 @@ class Withdraw extends BaseTransaction
     /**
      * @throws Exception
      */
-    public function handle(TransactionCalculator $transactionCalculator): void
+    public function handle(Account $account): void
     {
-        $accountBalance = $transactionCalculator->getAccountBalance($this->getAccountNumber());
+        $accountBalance = $account->getAccountBalance($this->getAccountNumber());
 
         if ($accountBalance < $this->getAmount()) {
             throw new Exception("Insufficient fund");
         }
 
-        $transactionCalculator->addTransaction(
+        $account->addTransaction(
             $this->getAccountNumber(),
             $this->getType(),
             $this->getAmount(),

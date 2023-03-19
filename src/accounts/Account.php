@@ -1,10 +1,10 @@
 <?php
 
-namespace Financial\Transactions\Transactions;
+namespace Financial\Transactions\Accounts;
 
 use Financial\Transactions\Enums\TransactionEnum;
 
-class TransactionCalculator
+class Account
 {
     private array $transactions;
 

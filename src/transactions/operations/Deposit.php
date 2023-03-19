@@ -2,9 +2,9 @@
 
 namespace Financial\Transactions\Transactions\Operations;
 
+use Financial\Transactions\Accounts\Account;
 use Financial\Transactions\Enums\TransactionEnum;
 use Financial\Transactions\Transactions\BaseTransaction;
-use Financial\Transactions\Transactions\TransactionCalculator;
 
 class Deposit extends BaseTransaction
 {
@@ -15,9 +15,9 @@ class Deposit extends BaseTransaction
         parent::__construct($accountNumber, $this->type, $amount, $comment, $dueDate);
     }
 
-    public function handle(TransactionCalculator $transactionCalculator): void
+    public function handle(Account $account): void
     {
-        $transactionCalculator->addTransaction(
+        $account->addTransaction(
             $this->getAccountNumber(),
             $this->getType(),
             $this->getAmount(),

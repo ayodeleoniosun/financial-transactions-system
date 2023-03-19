@@ -2,6 +2,8 @@
 
 namespace Financial\Transactions\Transactions;
 
+use Financial\Transactions\Accounts\Account;
+
 abstract class BaseTransaction
 {
     protected string $type;
@@ -59,5 +61,5 @@ abstract class BaseTransaction
         return $this->recipient;
     }
 
-    abstract public function handle(TransactionCalculator $transactionCalculator);
+    abstract public function handle(Account $account);
 }

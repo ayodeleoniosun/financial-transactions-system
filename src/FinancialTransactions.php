@@ -4,11 +4,11 @@ namespace Financial\Transactions;
 
 require "vendor/autoload.php";
 
+use Financial\Transactions\Accounts\Account;
 use Financial\Transactions\Accounts\AccountManager;
 use Financial\Transactions\Transactions\Operations\Deposit;
 use Financial\Transactions\Transactions\Operations\Transfer;
 use Financial\Transactions\Transactions\Operations\Withdraw;
-use Financial\Transactions\Transactions\TransactionCalculator;
 use Financial\Transactions\Transactions\TransactionFactory;
 
 // create new account
@@ -36,26 +36,26 @@ $allAccounts = $accountManager->getAllAccounts();
 
 // deposit to an account
 
-$transactionCalculator = new TransactionCalculator();
+$account = new Account();
 
 $deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 2000, 'This is a new deposit', date('Y-m-d'));
-$deposit->handle($transactionCalculator);
+$deposit->handle($account);
 
 $deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 3000, 'This is a new deposit', date('Y-m-d'));
-$deposit->handle($transactionCalculator);
+$deposit->handle($account);
 
 $deposit = TransactionFactory::create(Deposit::class, $allAccounts[0]->number, 4000, 'This is a new deposit', date('Y-m-d'));
-$deposit->handle($transactionCalculator);
+$deposit->handle($account);
 
 $deposit = TransactionFactory::create(Deposit::class, $allAccounts[0]->number, 5000, 'This is a new deposit', date('Y-m-d'));
-$deposit->handle($transactionCalculator);
+$deposit->handle($account);
 
 //withdraw from an account
 
 $withdraw = TransactionFactory::create(Withdraw::class, $getAccount->number, 1000, 'This is a new withdrawal', date('Y-m-d'));
 
 try {
-    $withdraw->handle($transactionCalculator);
+    $withdraw->handle($account);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
@@ -63,7 +63,7 @@ try {
 $withdraw = TransactionFactory::create(Withdraw::class, $getAccount->number, 500, 'This is a new withdrawal', date('Y-m-d'));
 
 try {
-    $withdraw->handle($transactionCalculator);
+    $withdraw->handle($account);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
@@ -74,7 +74,7 @@ try {
 $transfer = TransactionFactory::create(Transfer::class, $getAccount->number, 2000, 'This is a new transfer to ' . $allAccounts[0]->number, date('Y-m-d'), $allAccounts[0]->number);
 
 try {
-    $transfer->handle($transactionCalculator);
+    $transfer->handle($account);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
@@ -82,7 +82,7 @@ try {
 $transfer = TransactionFactory::create(Transfer::class, $getAccount->number, 2000, 'This is a new transfer to ' . $allAccounts[0]->number, date('Y-m-d'), $allAccounts[0]->number);
 
 try {
-    $transfer->handle($transactionCalculator);
+    $transfer->handle($account);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
