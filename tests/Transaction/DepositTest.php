@@ -51,18 +51,14 @@ final class DepositTest extends TestCase
      */
     public function test_can_deposit()
     {
-        $accountManager = AccountManager::getInstance();
-        $account = $accountManager->createAccount('Nameless User');
-        $getAccount = new Account($account->number);
-
-        $deposit = new Deposit($getAccount->getAccountNumber(), 3000, 'This is the first deposit', date("Y-m-d H:i:s"));
-        $deposit->handle($getAccount);
+        $deposit = new Deposit($this->getAccount->getAccountNumber(), 3000, 'This is the first deposit', date("Y-m-d H:i:s"));
+        $deposit->handle($this->getAccount);
 
         $this->assertEquals(TransactionEnum::DEPOSIT, $deposit->getType());
         $this->assertEquals(3000, $deposit->getAmount());
         $this->assertEquals('This is the first deposit', $deposit->getComment());
         $this->assertEquals(date("Y-m-d H:i:s"), $deposit->getDueDate());
-        $this->assertEquals($getAccount->getAccountNumber(), $deposit->getAccountNumber());
+        $this->assertEquals($this->getAccount->getAccountNumber(), $deposit->getAccountNumber());
         $this->assertNull($deposit->getRecipient());
     }
 }
