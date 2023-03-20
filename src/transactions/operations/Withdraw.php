@@ -29,9 +29,7 @@ class Withdraw extends BaseTransaction
             throw new Exception("The amount to be withdrawn must be greater than 0");
         }
 
-        $accountBalance = $account->getAccountBalance();
-
-        if ($accountBalance < $this->getAmount()) {
+        if ($account->getAccountBalance() < $this->getAmount()) {
             throw new Exception("Insufficient fund");
         }
 

@@ -21,9 +21,20 @@ class Transfer extends BaseTransaction
      */
     public function handle(Account $account): void
     {
-        $accountBalance = $account->getAccountBalance();
 
-        if ($accountBalance < $this->getAmount()) {
+        if (empty($this->getAccountNumber()) || empty($this->getType()) || empty($this->getAmount()) || empty($this->getComment()) || empty($this->getDueDate()) || empty($this->getRecipient())) {
+            throw new Exception("Please fill all fields");
+        }
+
+        if ($this->getAmount() < 1) {
+            throw new Exception("The amount to be transferred must be greater than 0");
+        }
+
+        if ($account->getAccountNumber() == $this->getRecipient()) {
+            throw new Exception("You cannot transfer funds to yourself");
+        }
+
+        if ($account->getAccountBalance() < $this->getAmount()) {
             throw new Exception("Insufficient fund");
         }
 

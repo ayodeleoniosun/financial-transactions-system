@@ -64,21 +64,17 @@ final class WithdrawTest extends TestCase
      */
     public function test_can_withdraw()
     {
-        $accountManager = AccountManager::getInstance();
-        $account = $accountManager->createAccount('Nameless User');
-        $getAccount = new Account($account->number);
+        $deposit = new Deposit($this->getAccount->getAccountNumber(), 3000, 'This is the first deposit', date("Y-m-d H:i:s"));
+        $deposit->handle($this->getAccount);
 
-        $deposit = new Deposit($getAccount->getAccountNumber(), 3000, 'This is the first deposit', date("Y-m-d H:i:s"));
-        $deposit->handle($getAccount);
-
-        $withdraw = new Withdraw($getAccount->getAccountNumber(), 1000, 'This is the first withdrawal', date("Y-m-d H:i:s"));
-        $withdraw->handle($getAccount);
+        $withdraw = new Withdraw($this->getAccount->getAccountNumber(), 1000, 'This is the first withdrawal', date("Y-m-d H:i:s"));
+        $withdraw->handle($this->getAccount);
 
         $this->assertEquals(TransactionEnum::WITHDRAW, $withdraw->getType());
         $this->assertEquals(1000, $withdraw->getAmount());
         $this->assertEquals('This is the first withdrawal', $withdraw->getComment());
         $this->assertEquals(date("Y-m-d H:i:s"), $withdraw->getDueDate());
-        $this->assertEquals($getAccount->getAccountNumber(), $withdraw->getAccountNumber());
+        $this->assertEquals($this->getAccount->getAccountNumber(), $withdraw->getAccountNumber());
         $this->assertNull($withdraw->getRecipient());
     }
 }
