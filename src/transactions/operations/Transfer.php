@@ -21,7 +21,6 @@ class Transfer extends BaseTransaction
      */
     public function handle(Account $account): void
     {
-
         if (empty($this->getAccountNumber()) || empty($this->getType()) || empty($this->getAmount()) || empty($this->getComment()) || empty($this->getDueDate()) || empty($this->getRecipient())) {
             throw new Exception("Please fill all fields");
         }

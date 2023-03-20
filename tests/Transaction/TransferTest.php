@@ -72,7 +72,7 @@ final class TransferTest extends TestCase
         $transfer = new Transfer($this->getAccount->getAccountNumber(), 500, 'This is the first transfer', date("Y-m-d H:i:s"), $this->recipient->number);
         $transfer->handle($this->getAccount);
     }
-    
+
     /**
      * @throws Exception
      */

@@ -67,7 +67,7 @@ final class FilterTransactionTest extends TestCase
         // create 2 transfers
         $transfer = new Transfer($this->getAccount->getAccountNumber(), 1000, 'This is the first transfer', date("Y-m-d H:i:s"), $this->recipient->number);
         $transfer->handle($this->getAccount);
-        
+
         $transfer = new Transfer($this->getAccount->getAccountNumber(), 2000, 'This is the second transfer', date("Y-m-d H:i:s"), $this->recipient->number);
         $transfer->handle($this->getAccount);
 
