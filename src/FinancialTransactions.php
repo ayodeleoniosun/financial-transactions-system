@@ -2,7 +2,7 @@
 
 namespace Financial\Transactions;
 
-require "vendor/autoload.php";
+require_once "vendor/autoload.php";
 
 use Financial\Transactions\Accounts\Account;
 use Financial\Transactions\Accounts\AccountManager;
@@ -41,16 +41,32 @@ $allAccounts = $accountManager->getAllAccounts();
 $account = new Account($getAccount->number);
 
 $deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 2000, 'This is the first deposit', date("Y-m-d H:i:s"));
-$deposit->handle($account);
+try {
+    $deposit->handle($account);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
 
 $deposit = TransactionFactory::create(Deposit::class, $getAccount->number, 3000, 'This is the second deposit', date("Y-m-d H:i:s"));
-$deposit->handle($account);
+try {
+    $deposit->handle($account);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
 
 $deposit = TransactionFactory::create(Deposit::class, $allAccounts[0]->number, 4000, 'This is the third deposit', date("Y-m-d H:i:s"));
-$deposit->handle($account);
+try {
+    $deposit->handle($account);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
 
 $deposit = TransactionFactory::create(Deposit::class, $allAccounts[0]->number, 5000, 'This is the fourth deposit', date("Y-m-d H:i:s"));
-$deposit->handle($account);
+try {
+    $deposit->handle($account);
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
 
 //withdraw from an account
 
@@ -92,7 +108,6 @@ try {
     echo $e->getMessage();
 }
 
-
 //filter transactions by due date
 
 $accountTransactions = $account->getAccountTransactions();
@@ -107,4 +122,4 @@ $filterTransactionsByDueDateDesc = $filterTransaction->filterTransactionsByDueDa
 
 $filterTransactionsByComment = $filterTransaction->filterTransactionsByComment();
 $filterTransactionsByCommentDesc = $filterTransaction->filterTransactionsByComment(FilterTransactionEnum::DESCENDING);
-var_dump($filterTransactionsByCommentDesc);
+//var_dump($filterTransactionsByCommentDesc);

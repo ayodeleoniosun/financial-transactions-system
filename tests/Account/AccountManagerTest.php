@@ -1,6 +1,6 @@
 <?php
 
-namespace Financial\Transactions\Tests;
+namespace Financial\Transactions\Tests\Account;
 
 use Exception;
 use Financial\Transactions\Accounts\AccountManager;

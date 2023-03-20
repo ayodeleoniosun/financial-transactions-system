@@ -1,6 +1,6 @@
 <?php
 
-namespace Financial\Transactions\Tests;
+namespace Financial\Transactions\Tests\Account;
 
 require_once "vendor/autoload.php";
 
