@@ -65,6 +65,9 @@ that extends the `BaseTransaction` parent class.
 `FilterTransactions`: This class handles the sorting for transactions by due date and comments both in ascending and
 descending order.
 
+`FinancialTransactions` class manually tests all the above mentioned features, although tests were written to automate
+that.
+
 ### Testing
 
 Tests were written via PHPUnit with a good test coverage.
