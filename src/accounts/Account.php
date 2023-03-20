@@ -16,15 +16,40 @@ class Account
         $this->accountNumber = $accountNumber;
     }
 
-    public function createTransaction($payload): void
+    public function getAccountNumber(): int
     {
+        return $this->accountNumber;
+    }
+
+    public function createTransaction($payload): object
+    {
+        $transactionId = count($this->transactions) + 1;
+
+        $payload['id'] = $transactionId;
+
         $this->transactions[] = (object)$payload;
+
+        $transaction = $this->getTransactionByIndex('id', $transactionId);
+
+        return $this->transactions[$transaction];
+    }
+
+    public function getTransactionByIndex(string $column, string $value): bool|int
+    {
+        return array_search($value, array_column($this->getTransactions(), $column));
+    }
+
+    public function getTransactions(): array
+    {
+        return $this->transactions;
     }
 
     public function getAccountBalance(): float|int
     {
         $deposits = array_sum(array_column($this->getDepositTransactions(), 'amount'));
+
         $withdrawals = array_sum(array_column($this->getWithdrawalTransactions(), 'amount'));
+
         $transfers = array_sum(array_column($this->getTransferTransactions(), 'amount'));
 
         return $deposits - ($withdrawals + $transfers);
@@ -58,5 +83,4 @@ class Account
             return $transaction->accountNumber === $this->accountNumber;
         }));
     }
-
 }
