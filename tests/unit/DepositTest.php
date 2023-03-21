@@ -11,12 +11,14 @@ use PHPUnit\Framework\TestCase;
 final class DepositTest extends TestCase
 {
     protected TransactionManager $transactionManager;
+    protected Account $accountManager;
     protected Account $account;
 
     public function setUp(): void
     {
         $this->transactionManager = new TransactionManager();
-        $this->account = Account::getInstance();
+        $this->accountManager = Account::getInstance();
+        $this->account = $this->accountManager->createAccount('Nameless User');
     }
 
     /**
@@ -26,6 +28,7 @@ final class DepositTest extends TestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Invalid account number.");
+
         $this->transactionManager->deposit(1000, 11111);
     }
 
@@ -36,6 +39,7 @@ final class DepositTest extends TestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Account does not exist.");
+
         $this->transactionManager->deposit(1000, 12345678911);
     }
 
@@ -44,11 +48,10 @@ final class DepositTest extends TestCase
      */
     public function test_cannot_deposit_an_invalid_amount()
     {
-        $account = $this->account->createAccount('Nameless User');
-
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Invalid amount. Try again");
-        $this->transactionManager->deposit(0, $account->getAccountNumber());
+
+        $this->transactionManager->deposit(0, $this->account->getAccountNumber());
     }
 
     /**
@@ -56,14 +59,12 @@ final class DepositTest extends TestCase
      */
     public function test_can_deposit()
     {
-        $account = $this->account->createAccount('Nameless User');
-
-        $deposit = $this->transactionManager->deposit(1000, $account->getAccountNumber());
+        $deposit = $this->transactionManager->deposit(1000, $this->account->getAccountNumber());
 
         $this->assertEquals(1000, $deposit->amount);
         $this->assertEquals(TransactionEnum::DEPOSIT, $deposit->type);
         $this->assertNull($deposit->sender);
-        $this->assertEquals($account->getAccountNumber(), $deposit->recipient);
+        $this->assertEquals($this->account->getAccountNumber(), $deposit->recipient);
         $this->assertEquals(0, $deposit->old_balance);
         $this->assertEquals(1000, $deposit->new_balance);
     }
