@@ -4,6 +4,7 @@ namespace Financial\Transactions\Tests;
 
 use Exception;
 use Financial\Transactions\Account;
+use Financial\Transactions\Enums\FilterTransactionEnum;
 use Financial\Transactions\Enums\TransactionEnum;
 use Financial\Transactions\Ledger;
 use Financial\Transactions\TransactionManager;
@@ -71,10 +72,12 @@ final class LedgerTest extends TestCase
         $this->transactionManager->deposit(4000, $this->account->getAccountNumber());
         $this->transactionManager->deposit(5000, $this->account->getAccountNumber());
         $this->transactionManager->deposit(6000, $this->account->getAccountNumber());
+        sleep(1); // This is to ensure that all transactions does not have the same due date
 
         // create withdrawals
         $this->transactionManager->withdraw(2000, $this->account->getAccountNumber());
         $this->transactionManager->withdraw(1000, $this->account->getAccountNumber());
+        sleep(1);
 
         // create transfers
         $this->transactionManager->transfer(2000, $this->account->getAccountNumber(), $this->recipient->getAccountNumber());
@@ -125,5 +128,69 @@ final class LedgerTest extends TestCase
         });
 
         $this->assertGreaterThan(0, $transfers);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_can_filter_transactions_by_due_date_in_ascending_order()
+    {
+        $this->simulateAccountTransactions();
+
+        $transactions = $this->transactionManager->getAccountTransactions($this->account);
+
+        $filterTransactionsByDueDateAsc = $this->ledger->filterTransactionsByDueDate($transactions);
+
+        usort($filterTransactionsByDueDateAsc, function ($a, $b) {
+            $this->assertGreaterThanOrEqual($a->dueDate, $b->dueDate);
+        });
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_can_filter_transactions_by_due_date_in_descending_order()
+    {
+        $this->simulateAccountTransactions();
+
+        $transactions = $this->transactionManager->getAccountTransactions($this->account);
+
+        $filterTransactionsByDueDateDesc = $this->ledger->filterTransactionsByDueDate($transactions, FilterTransactionEnum::DESCENDING);
+
+        usort($filterTransactionsByDueDateDesc, function ($a, $b) {
+            $this->assertLessThanOrEqual($a->dueDate, $b->dueDate);
+        });
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_can_filter_transactions_by_comment_in_ascending_order()
+    {
+        $this->simulateAccountTransactions();
+
+        $transactions = $this->transactionManager->getAccountTransactions($this->account);
+
+        $filterTransactionsByCommentAsc = $this->ledger->filterTransactionsByComment($transactions);
+
+        usort($filterTransactionsByCommentAsc, function ($a, $b) {
+            $this->assertGreaterThanOrEqual($a->comment, $b->comment);
+        });
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function test_can_filter_transactions_by_comment_in_descending_order()
+    {
+        $this->simulateAccountTransactions();
+
+        $transactions = $this->transactionManager->getAccountTransactions($this->account);
+
+        $filterTransactionsByCommentDesc = $this->ledger->filterTransactionsByComment($transactions, FilterTransactionEnum::DESCENDING);
+
+        usort($filterTransactionsByCommentDesc, function ($a, $b) {
+            $this->assertLessThanOrEqual($a->comment, $b->comment);
+        });
     }
 }
