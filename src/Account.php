@@ -7,20 +7,16 @@ use Exception;
 class Account
 {
     private static $instance;
-
-    private static array $accounts;
-
     protected int $id;
-
     protected string $name;
-
     protected int $accountNumber;
-
     protected float $balance;
+    protected array $accounts;
 
     private function __construct()
     {
-        self::$accounts = [];
+        $this->accounts = [];
+        $this->balance = 0.0;
     }
 
     public static function getInstance(): self
@@ -54,17 +50,15 @@ class Account
 
     public function getAllAccounts(): array
     {
-        return self::$accounts;
+        return $this->accounts;
     }
-    
+
     /**
      * @throws Exception
      */
-    public function setAccountBalance(int $accountNumber, float $balance): void
+    public function setAccountBalance(float $balance): void
     {
-        $account = $this->getAccount($accountNumber);
-
-        $account->balance = $balance;
+        $this->balance = $balance;
     }
 
     /**
@@ -78,7 +72,7 @@ class Account
             throw new Exception('Invalid account number.');
         }
 
-        $account = self::$accounts[$accountNumber] ?? null;
+        $account = $this->accounts[$accountNumber] ?? null;
 
         if (!$account) {
             throw new Exception('Account does not exist.');
@@ -87,9 +81,9 @@ class Account
         return $account;
     }
 
-    public function createAccount(string $fullname): object
+    public function createAccount(string $fullname): self
     {
-        $accountId = count(self::$accounts) + 1;
+        $accountId = count($this->accounts) + 1;
 
         $accountNumber = rand(11111111111, 99999999999); // account number must be of 11 numeric characters
 
@@ -99,8 +93,8 @@ class Account
         $account->name = $fullname;
         $account->balance = 0.0;
 
-        self::$accounts[$accountNumber] = $account;
+        $this->accounts[$accountNumber] = $account;
 
-        return self::$accounts[$accountNumber];
+        return $this->accounts[$accountNumber];
     }
 }
