@@ -114,7 +114,7 @@ class TransactionManager
             'dueDate' => date("Y-m-d H:i:s"),
             'type' => TransactionEnum::WITHDRAW,
             'sender' => null,
-            'recipient' => $accountNumber,
+            'recipient' => $accountNumber, //this is account withdrawn from
             'old_balance' => $oldBalance,
             'new_balance' => $newBalance,
         ];
