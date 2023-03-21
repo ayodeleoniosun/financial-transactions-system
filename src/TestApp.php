@@ -105,4 +105,3 @@ $filterTransactionsByDueDateDesc = $ledger->filterTransactionsByDueDate($transac
 
 $filterTransactionsByComment = $ledger->filterTransactionsByComment($transactions);
 $filterTransactionsByCommentDesc = $ledger->filterTransactionsByComment($transactions, FilterTransactionEnum::DESCENDING);
-

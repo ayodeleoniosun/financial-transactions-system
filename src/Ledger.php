@@ -5,7 +5,7 @@ namespace Financial\Transactions;
 use Financial\Transactions\Enums\FilterTransactionEnum;
 use Financial\Transactions\Enums\TransactionEnum;
 
-class Ledger extends BaseTransaction
+class Ledger
 {
     public function getAccountDepositTransactions(array $transactions): array
     {
