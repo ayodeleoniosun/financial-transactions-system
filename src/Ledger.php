@@ -2,22 +2,14 @@
 
 namespace Financial\Transactions;
 
+use Financial\Transactions\Enums\FilterTransactionEnum;
 use Financial\Transactions\Enums\TransactionEnum;
 
 class Ledger extends BaseTransaction
 {
-    public function getAccountDepositTransactions(Account $account, array $transactions): array
+    public function getAccountDepositTransactions(array $transactions): array
     {
-        $accountTransactions = $this->getAccountTransactions($account, $transactions);
-
-        return $this->getAccountTransactionsByType(TransactionEnum::DEPOSIT, $accountTransactions);
-    }
-
-    public function getAccountTransactions(Account $account, array $transactions): array
-    {
-        return array_values(array_filter($transactions, function ($transaction) use ($account) {
-            return $transaction->sender === $account->getAccountNumber() || $transaction->recipient === $account->getAccountNumber();
-        }));
+        return $this->getAccountTransactionsByType(TransactionEnum::DEPOSIT, $transactions);
     }
 
     public function getAccountTransactionsByType(string $type, array $transactions): array
@@ -27,17 +19,39 @@ class Ledger extends BaseTransaction
         }));
     }
 
-    public function getAccountWithdrawalTransactions(Account $account, array $transactions): array
+    public function getAccountWithdrawalTransactions(array $transactions): array
     {
-        $accountTransactions = $this->getAccountTransactions($account, $transactions);
-
-        return $this->getAccountTransactionsByType(TransactionEnum::WITHDRAW, $accountTransactions);
+        return $this->getAccountTransactionsByType(TransactionEnum::WITHDRAW, $transactions);
     }
 
-    public function getAccountTransferTransactions(Account $account, array $transactions): array
+    public function getAccountTransferTransactions(array $transactions): array
     {
-        $accountTransactions = $this->getAccountTransactions($account, $transactions);
+        return $this->getAccountTransactionsByType(TransactionEnum::TRANSFER, $transactions);
+    }
 
-        return $this->getAccountTransactionsByType(TransactionEnum::TRANSFER, $accountTransactions);
+    public function filterTransactionsByDueDate(array $transactions, $filterType = FilterTransactionEnum::ASCENDING): array
+    {
+        usort($transactions, function ($a, $b) use ($filterType) {
+            if ($filterType === FilterTransactionEnum::ASCENDING) {
+                return strcmp($a->dueDate, $b->dueDate);
+            }
+
+            return strcmp($b->dueDate, $a->dueDate);
+        });
+
+        return $transactions;
+    }
+
+    public function filterTransactionsByComment(array $transactions, $filterType = FilterTransactionEnum::ASCENDING): array
+    {
+        usort($transactions, function ($a, $b) use ($filterType) {
+            if ($filterType === FilterTransactionEnum::ASCENDING) {
+                return strcmp($a->comment, $b->comment);
+            }
+
+            return strcmp($b->comment, $a->comment);
+        });
+
+        return $transactions;
     }
 }

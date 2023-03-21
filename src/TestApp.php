@@ -2,6 +2,8 @@
 
 namespace Financial\Transactions;
 
+use Financial\Transactions\Enums\FilterTransactionEnum;
+
 require_once "vendor/autoload.php";
 
 // create new account
@@ -38,6 +40,8 @@ try {
     echo $e->getMessage();
 }
 
+sleep(1); // This is to ensure that all transactions does not have the same due date
+
 //withdraw
 
 try {
@@ -48,6 +52,8 @@ try {
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
+
+sleep(1);
 
 /*
     account 1 balance - 10500
@@ -66,6 +72,8 @@ try {
     // sender old - 9500, sender new - 8500
     // recipient old - 2000, recipient new  - 3000
 
+    sleep(1);
+
     $transactionManager->transfer(500, $account2->getAccountNumber(), $account1->getAccountNumber());
     // sender old - 5500, sender new - 5000
     // recipient old - 8500, recipient new  - 9000
@@ -74,6 +82,8 @@ try {
     // sender old - 5000, sender new - 2500
     // recipient old - 3000, recipient new  - 5500
 
+    sleep(1);
+
     $transactionManager->transfer(3000, $account3->getAccountNumber(), $account1->getAccountNumber());
     // sender old - 5500, sender new - 2500
     // recipient old - 9000, recipient new  - 12000
@@ -81,10 +91,18 @@ try {
     echo $e->getMessage();
 }
 
-$transactions = $transactionManager->getTransactions();
+$transactions = $transactionManager->getAccountTransactions($account1);
 
 $ledger = new Ledger();
 
-$deposits = $ledger->getAccountDepositTransactions($account1, $transactions);
-$withdrawals = $ledger->getAccountWithdrawalTransactions($account2, $transactions);
-$transfers = $ledger->getAccountTransferTransactions($account1, $transactions);
+$deposits = $ledger->getAccountDepositTransactions($transactions);
+$withdrawals = $ledger->getAccountWithdrawalTransactions($transactions);
+$transfers = $ledger->getAccountTransferTransactions($transactions);
+
+
+$filterTransactionsByDueDate = $ledger->filterTransactionsByDueDate($transactions);
+$filterTransactionsByDueDateDesc = $ledger->filterTransactionsByDueDate($transactions, FilterTransactionEnum::DESCENDING);
+
+$filterTransactionsByComment = $ledger->filterTransactionsByComment($transactions);
+$filterTransactionsByCommentDesc = $ledger->filterTransactionsByComment($transactions, FilterTransactionEnum::DESCENDING);
+

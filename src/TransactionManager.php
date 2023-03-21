@@ -81,6 +81,13 @@ class TransactionManager
         $this->transactions[$transaction->id] = $transaction;
     }
 
+    public function getAccountTransactions(Account $account): array
+    {
+        return array_values(array_filter($this->transactions, function ($transaction) use ($account) {
+            return $transaction->sender === $account->getAccountNumber() || $transaction->recipient === $account->getAccountNumber();
+        }));
+    }
+
     /**
      * @throws Exception
      */
