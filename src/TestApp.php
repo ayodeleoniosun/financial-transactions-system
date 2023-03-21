@@ -16,7 +16,6 @@ $account3 = $account->createAccount('Ayodele Oniosun');
 // get single account
 try {
     $getAccount = $account->getAccount($account2->getAccountNumber());
-    //var_dump($getAccount);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
