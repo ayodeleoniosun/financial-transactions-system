@@ -127,19 +127,19 @@ class TransactionManager
     /**
      * @throws Exception
      */
-    public function transfer(float $amount, int $sender, int $recipient): void
+    public function transfer(float $amount, int $sender, int $recipient): object
     {
         $getSender = $this->validateAccount($sender);
 
         $getRecipient = $this->validateAccount($recipient);
 
-        $this->validateAmount($amount);
-
-        $senderOldBalance = $getSender->getAccountBalance();
-
         if ($getSender->getAccountNumber() == $getRecipient->getAccountNumber()) {
             throw new Exception("You cannot transfer funds to yourself.");
         }
+
+        $this->validateAmount($amount);
+
+        $senderOldBalance = $getSender->getAccountBalance();
 
         if ($senderOldBalance < $amount) {
             throw new Exception("Insufficient fund");
@@ -169,6 +169,6 @@ class TransactionManager
 
         $getRecipient->setAccountBalance($recipientNewBalance);
 
-        $this->createTransaction($payload);
+        return $this->createTransaction($payload);
     }
 }
