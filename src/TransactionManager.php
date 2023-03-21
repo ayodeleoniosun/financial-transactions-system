@@ -17,7 +17,7 @@ class TransactionManager
     /**
      * @throws Exception
      */
-    public function deposit(float $amount, int $recipient): void
+    public function deposit(float $amount, int $recipient): object
     {
         $account = $this->validateAccount($recipient);
 
@@ -41,7 +41,7 @@ class TransactionManager
 
         $account->setAccountBalance($newBalance);
 
-        $this->createTransaction($payload);
+        return $this->createTransaction($payload);
     }
 
     /**
@@ -76,9 +76,11 @@ class TransactionManager
         return $this->transactions;
     }
 
-    public function createTransaction($transaction): void
+    public function createTransaction($transaction): object
     {
         $this->transactions[$transaction->id] = $transaction;
+
+        return $this->transactions[$transaction->id];
     }
 
     public function getAccountTransactions(Account $account): array
@@ -91,7 +93,7 @@ class TransactionManager
     /**
      * @throws Exception
      */
-    public function withdraw(float $amount, int $accountNumber): void
+    public function withdraw(float $amount, int $accountNumber): object
     {
         $account = $this->validateAccount($accountNumber);
 
@@ -119,7 +121,7 @@ class TransactionManager
 
         $account->setAccountBalance($newBalance);
 
-        $this->createTransaction($payload);
+        return $this->createTransaction($payload);
     }
 
     /**

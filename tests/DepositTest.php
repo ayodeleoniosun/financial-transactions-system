@@ -8,7 +8,7 @@ use Financial\Transactions\Enums\TransactionEnum;
 use Financial\Transactions\TransactionManager;
 use PHPUnit\Framework\TestCase;
 
-class TransactionManagerTest extends TestCase
+final class DepositTest extends TestCase
 {
     protected TransactionManager $transactionManager;
     protected Account $account;
