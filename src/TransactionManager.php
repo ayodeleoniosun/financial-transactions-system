@@ -5,8 +5,15 @@ namespace Financial\Transactions;
 use Exception;
 use Financial\Transactions\Enums\TransactionEnum;
 
-class TransactionManager extends BaseTransaction
+class TransactionManager
 {
+    protected array $transactions;
+
+    public function __construct()
+    {
+        $this->transactions = [];
+    }
+
     /**
      * @throws Exception
      */
@@ -64,6 +71,16 @@ class TransactionManager extends BaseTransaction
         return count($this->getTransactions()) + 1;
     }
 
+    public function getTransactions(): array
+    {
+        return $this->transactions;
+    }
+
+    public function createTransaction($transaction): void
+    {
+        $this->transactions[$transaction->id] = $transaction;
+    }
+
     /**
      * @throws Exception
      */
@@ -104,6 +121,7 @@ class TransactionManager extends BaseTransaction
     public function transfer(float $amount, int $sender, int $recipient): void
     {
         $getSender = $this->validateAccount($sender);
+
         $getRecipient = $this->validateAccount($recipient);
 
         $this->validateAmount($amount);
@@ -121,6 +139,7 @@ class TransactionManager extends BaseTransaction
         $recipientOldBalance = $getRecipient->getAccountBalance();
 
         $senderNewBalance = $senderOldBalance - $amount;
+
         $recipientNewBalance = $recipientOldBalance + $amount;
 
         $payload = (object)[
@@ -129,7 +148,7 @@ class TransactionManager extends BaseTransaction
             'amount' => $amount,
             'dueDate' => date("Y-m-d H:i:s"),
             'type' => TransactionEnum::TRANSFER,
-            'sender' => null,
+            'sender' => $sender,
             'recipient' => $recipient,
             'sender_old_balance' => $senderOldBalance,
             'sender_new_balance' => $senderNewBalance,
@@ -138,6 +157,7 @@ class TransactionManager extends BaseTransaction
         ];
 
         $getSender->setAccountBalance($senderNewBalance);
+
         $getRecipient->setAccountBalance($recipientNewBalance);
 
         $this->createTransaction($payload);

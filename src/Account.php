@@ -97,4 +97,8 @@ class Account
 
         return $this->accounts[$accountNumber];
     }
+
+    final protected function __clone()
+    {
+    }
 }

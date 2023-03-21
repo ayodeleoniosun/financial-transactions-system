@@ -24,9 +24,9 @@ echo "\n";
 //get all accounts
 $allAccounts = $account->getAllAccounts();
 
-//var_dump($allAccounts);
-
 $transactionManager = new TransactionManager();
+
+//deposit
 
 try {
     $transactionManager->deposit(10000, $account1->getAccountNumber());
@@ -38,6 +38,7 @@ try {
     echo $e->getMessage();
 }
 
+//withdraw
 
 try {
     $transactionManager->withdraw(1000, $account1->getAccountNumber());
@@ -53,6 +54,8 @@ try {
     account 2 balance - 4500
     account 3 balance - 2000
 */
+
+//transfer
 
 try {
     $transactionManager->transfer(1000, $account1->getAccountNumber(), $account2->getAccountNumber());
@@ -74,9 +77,14 @@ try {
     $transactionManager->transfer(3000, $account3->getAccountNumber(), $account1->getAccountNumber());
     // sender old - 5500, sender new - 2500
     // recipient old - 9000, recipient new  - 12000
-
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
 
-var_dump($transactionManager->getTransactions());
+$transactions = $transactionManager->getTransactions();
+
+$ledger = new Ledger();
+
+$deposits = $ledger->getAccountDepositTransactions($account1, $transactions);
+$withdrawals = $ledger->getAccountWithdrawalTransactions($account2, $transactions);
+$transfers = $ledger->getAccountTransferTransactions($account1, $transactions);
