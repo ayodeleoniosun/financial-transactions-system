@@ -2,7 +2,9 @@
 
 namespace Financial\Transactions;
 
-use Financial\Transactions\Enums\FilterTransactionEnum;
+use Financial\Transactions\services\DepositService;
+use Financial\Transactions\services\TransferService;
+use Financial\Transactions\services\WithdrawalService;
 
 require_once "vendor/autoload.php";
 
@@ -29,78 +31,82 @@ $transactionManager = new TransactionManager();
 
 //deposit
 
+$deposit = new DepositService();
+
 try {
-    $transactionManager->deposit(10000, $account1->getAccountNumber());
-    $transactionManager->deposit(2000, $account1->getAccountNumber());
-    $transactionManager->deposit(3000, $account2->getAccountNumber());
-    $transactionManager->deposit(4000, $account2->getAccountNumber());
-    $transactionManager->deposit(5000, $account3->getAccountNumber());
+    $deposit->handler(10000, $account1);
+    $deposit->handler(5000, $account1);
+    $deposit->handler(2000, $account2);
+    $deposit->handler(4000, $account2);
+    $deposit->handler(5000, $account3);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
+
+/*
+    account 1 balance after deposit - 15000
+    account 2 balance after deposit - 6000
+    account 3 balance after deposit - 5000
+*/
 
 sleep(1); // This is to ensure that all transactions does not have the same due date
 
 //withdraw
 
+$withdrawal = new WithdrawalService();
+
 try {
-    $transactionManager->withdraw(1000, $account1->getAccountNumber());
-    $transactionManager->withdraw(500, $account1->getAccountNumber());
-    $transactionManager->withdraw(2500, $account2->getAccountNumber());
-    $transactionManager->withdraw(3000, $account3->getAccountNumber());
+    $withdrawal->handler(6000, $account1);
+    $withdrawal->handler(5000, $account1);
+
+    sleep(1); // This is to ensure that all transactions does not have the same due date
+
+    $withdrawal->handler(1500, $account2);
+    $withdrawal->handler(4000, $account3);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
+
+/*
+    account 1 balance after withdrawal - 4000
+    account 2 balance after withdrawal - 4500
+    account 3 balance after withdrawal - 1000
+*/
 
 sleep(1);
 
-/*
-    account 1 balance - 10500
-    account 2 balance - 4500
-    account 3 balance - 2000
-*/
-
-//transfer
+$transfer = new TransferService();
 
 try {
-    $transactionManager->transfer(1000, $account1->getAccountNumber(), $account2->getAccountNumber());
-    // sender old - 10500, sender new - 9500
-    // recipient old - 4500, recipient new  - 5500
-
-    $transactionManager->transfer(1000, $account1->getAccountNumber(), $account3->getAccountNumber());
-    // sender old - 9500, sender new - 8500
-    // recipient old - 2000, recipient new  - 3000
+    $transfer->handler(1000, $account1, $account2);
+    $transfer->handler(1000, $account1, $account3);
 
     sleep(1);
 
-    $transactionManager->transfer(500, $account2->getAccountNumber(), $account1->getAccountNumber());
-    // sender old - 5500, sender new - 5000
-    // recipient old - 8500, recipient new  - 9000
-
-    $transactionManager->transfer(2500, $account2->getAccountNumber(), $account3->getAccountNumber());
-    // sender old - 5000, sender new - 2500
-    // recipient old - 3000, recipient new  - 5500
-
-    sleep(1);
-
-    $transactionManager->transfer(3000, $account3->getAccountNumber(), $account1->getAccountNumber());
-    // sender old - 5500, sender new - 2500
-    // recipient old - 9000, recipient new  - 12000
+    $transfer->handler(1500, $account2, $account1);
+    $transfer->handler(1000, $account2, $account3);
 } catch (\Exception $e) {
     echo $e->getMessage();
 }
 
-$transactions = $transactionManager->getAccountTransactions($account1);
+/*
+    account 1 balance after transfer - 3500
+    account 2 balance after transfer - 3000
+    account 3 balance after transfer - 3000
+*/
 
-$ledger = new Ledger();
-
-$deposits = $ledger->getAccountDepositTransactions($transactions);
-$withdrawals = $ledger->getAccountWithdrawalTransactions($transactions);
-$transfers = $ledger->getAccountTransferTransactions($transactions);
-
-
-$filterTransactionsByDueDate = $ledger->filterTransactionsByDueDate($transactions);
-$filterTransactionsByDueDateDesc = $ledger->filterTransactionsByDueDate($transactions, FilterTransactionEnum::DESCENDING);
-
-$filterTransactionsByComment = $ledger->filterTransactionsByComment($transactions);
-$filterTransactionsByCommentDesc = $ledger->filterTransactionsByComment($transactions, FilterTransactionEnum::DESCENDING);
+//
+//$transactions = $transactionManager->getAccountTransactions($account1);
+//
+//$ledger = new Ledger();
+//
+//$deposits = $ledger->getAccountDepositTransactions($transactions);
+//$withdrawals = $ledger->getAccountWithdrawalTransactions($transactions);
+//$transfers = $ledger->getAccountTransferTransactions($transactions);
+//
+//
+//$filterTransactionsByDueDate = $ledger->filterTransactionsByDueDate($transactions);
+//$filterTransactionsByDueDateDesc = $ledger->filterTransactionsByDueDate($transactions, FilterTransactionEnum::DESCENDING);
+//
+//$filterTransactionsByComment = $ledger->filterTransactionsByComment($transactions);
+//$filterTransactionsByCommentDesc = $ledger->filterTransactionsByComment($transactions, FilterTransactionEnum::DESCENDING);
