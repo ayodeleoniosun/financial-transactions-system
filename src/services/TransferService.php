@@ -4,8 +4,8 @@ namespace Financial\Transactions\services;
 
 use Exception;
 use Financial\Transactions\Account;
-use Financial\Transactions\contracts\TransactionServiceInterface;
 use Financial\Transactions\Enums\TransactionEnum;
+use Financial\Transactions\interfaces\TransactionServiceInterface;
 use Financial\Transactions\TransactionManager;
 
 class TransferService extends TransactionManager implements TransactionServiceInterface

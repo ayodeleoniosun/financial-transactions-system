@@ -2,6 +2,7 @@
 
 namespace Financial\Transactions;
 
+use Financial\Transactions\Enums\FilterTransactionEnum;
 use Financial\Transactions\services\DepositService;
 use Financial\Transactions\services\TransferService;
 use Financial\Transactions\services\WithdrawalService;
@@ -15,18 +16,17 @@ $account1 = $account->createAccount('John Doe');
 $account2 = $account->createAccount('Nameless User');
 $account3 = $account->createAccount('Ayodele Oniosun');
 
-//// get single account
-//try {
-//    $account->getAccount($account2->getAccountNumber());
-//} catch (\Exception $e) {
-//    echo $e->getMessage();
-//}
-//
-//echo "\n";
+// get single account
+try {
+    $account->getAccount($account2->getAccountNumber());
+} catch (\Exception $e) {
+    echo $e->getMessage();
+}
+
+echo "\n";
 
 $allAccounts = $account->getAllAccounts(); //get all accounts
 
-//var_dump($allAccounts);
 $transactionManager = new TransactionManager();
 
 //deposit
@@ -82,19 +82,16 @@ try {
 //*/
 
 
-$transactions = $transactionManager->getTransactions();
+$transactions = $transactionManager::getAccountTransactions($account1);
 
-var_dump($transactions);
+$ledger = new Ledger();
 
-//$ledger = new Ledger();
-//
-//$deposits = $ledger->getAccountDepositTransactions($transactions);
-//$withdrawals = $ledger->getAccountWithdrawalTransactions($transactions);
-//$transfers = $ledger->getAccountTransferTransactions($transactions);
-//
-//
-//$filterTransactionsByDueDate = $ledger->filterTransactionsByDueDate($transactions);
-//$filterTransactionsByDueDateDesc = $ledger->filterTransactionsByDueDate($transactions, FilterTransactionEnum::DESCENDING);
-//
-//$filterTransactionsByComment = $ledger->filterTransactionsByComment($transactions);
-//$filterTransactionsByCommentDesc = $ledger->filterTransactionsByComment($transactions, FilterTransactionEnum::DESCENDING);
+$deposits = $ledger->getAccountDepositTransactions($transactions);
+$withdrawals = $ledger->getAccountWithdrawalTransactions($transactions);
+$transfers = $ledger->getAccountTransferTransactions($transactions);
+
+$filterTransactionsByDueDate = $ledger->filterTransactionsByDueDate($transactions);
+$filterTransactionsByDueDateDesc = $ledger->filterTransactionsByDueDate($transactions, FilterTransactionEnum::DESCENDING);
+
+$filterTransactionsByComment = $ledger->filterTransactionsByComment($transactions);
+$filterTransactionsByCommentDesc = $ledger->filterTransactionsByComment($transactions, FilterTransactionEnum::DESCENDING);

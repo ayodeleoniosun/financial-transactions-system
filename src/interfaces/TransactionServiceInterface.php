@@ -1,6 +1,6 @@
 <?php
 
-namespace Financial\Transactions\contracts;
+namespace Financial\Transactions\interfaces;
 
 use Financial\Transactions\Account;
 
