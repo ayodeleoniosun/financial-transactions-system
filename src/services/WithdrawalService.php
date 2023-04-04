@@ -4,27 +4,27 @@ namespace Financial\Transactions\services;
 
 use Exception;
 use Financial\Transactions\Account;
-use Financial\Transactions\contracts\BaseTransactionService;
 use Financial\Transactions\contracts\TransactionServiceInterface;
 use Financial\Transactions\Enums\TransactionEnum;
+use Financial\Transactions\TransactionManager;
 
-class WithdrawalService extends BaseTransactionService implements TransactionServiceInterface
+class WithdrawalService extends TransactionManager implements TransactionServiceInterface
 {
     /**
      * @throws Exception
      */
-    public function handler(float $amount, Account $account, Account|null $recipient = null): object
+    public static function handler(float $amount, Account $account, Account|null $recipient = null): object
     {
-        $oldBalance = $this->checkFundSufficiencyAndReturnBalance($amount, $account);
+        $oldBalance = self::checkFundSufficiencyAndReturnBalance($amount, $account);
 
         $newBalance = $oldBalance - $amount;
 
         $payload = (object)[
-            'id' => $this->generateTransactionId(),
+            'id' => self::generateTransactionId(),
             'comment' => "This is a withdrawal from {$account->getAccountNumber()}'s account",
             'amount' => $amount,
             'dueDate' => date("Y-m-d H:i:s"),
-            'type' => $this->transactionType(),
+            'type' => self::transactionType(),
             'sender' => null,
             'recipient' => $account->getAccountNumber(), //this is account withdrawn from
             'old_balance' => $oldBalance,
@@ -33,10 +33,10 @@ class WithdrawalService extends BaseTransactionService implements TransactionSer
 
         $account->setAccountBalance($newBalance);
 
-        return $this->createTransaction($payload);
+        return self::createTransaction($payload);
     }
 
-    public function transactionType(): string
+    public static function transactionType(): string
     {
         return TransactionEnum::WITHDRAW;
     }

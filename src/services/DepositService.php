@@ -4,29 +4,28 @@ namespace Financial\Transactions\services;
 
 use Exception;
 use Financial\Transactions\Account;
-use Financial\Transactions\contracts\BaseTransactionService;
 use Financial\Transactions\contracts\TransactionServiceInterface;
 use Financial\Transactions\Enums\TransactionEnum;
+use Financial\Transactions\TransactionManager;
 
-class DepositService extends BaseTransactionService implements TransactionServiceInterface
+class DepositService extends TransactionManager implements TransactionServiceInterface
 {
     /**
      * @throws Exception
      */
-    public function handler(float $amount, Account $account, Account|null $recipient = null): object
+    public static function handler(float $amount, Account $account, Account|null $recipient = null): object
     {
-        $this->validateAmount($amount);
+        self::validateAmount($amount);
 
         $oldBalance = $account->getAccountBalance();
 
         $newBalance = $oldBalance + $amount;
 
         $payload = (object)[
-            'id' => $this->generateTransactionId(),
             'comment' => "This is a deposit into {$account->getAccountNumber()}'s account",
             'amount' => $amount,
             'dueDate' => date("Y-m-d H:i:s"),
-            'type' => $this->transactionType(),
+            'type' => self::transactionType(),
             'sender' => null,
             'recipient' => $account->getAccountNumber(),
             'old_balance' => $oldBalance,
@@ -35,10 +34,10 @@ class DepositService extends BaseTransactionService implements TransactionServic
 
         $account->setAccountBalance($newBalance);
 
-        return $this->createTransaction($payload);
+        return self::createTransaction($payload);
     }
 
-    public function transactionType(): string
+    public static function transactionType(): string
     {
         return TransactionEnum::DEPOSIT;
     }

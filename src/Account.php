@@ -7,10 +7,15 @@ use Exception;
 class Account
 {
     private static $instance;
+
     protected int $id;
+
     protected string $name;
+
     protected int $accountNumber;
+
     protected float $balance;
+
     protected array $accounts;
 
     private function __construct()
@@ -21,7 +26,7 @@ class Account
 
     public static function getInstance(): self
     {
-        if (self::$instance === null) {
+        if (!self::$instance) {
             self::$instance = new self();
         }
 
