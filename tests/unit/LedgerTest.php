@@ -7,6 +7,9 @@ use Financial\Transactions\Account;
 use Financial\Transactions\Enums\FilterTransactionEnum;
 use Financial\Transactions\Enums\TransactionEnum;
 use Financial\Transactions\Ledger;
+use Financial\Transactions\services\DepositService;
+use Financial\Transactions\services\TransferService;
+use Financial\Transactions\services\WithdrawalService;
 use Financial\Transactions\TransactionManager;
 use PHPUnit\Framework\TestCase;
 
@@ -27,19 +30,6 @@ final class LedgerTest extends TestCase
         $this->recipient = $this->accountManager->createAccount('Ayodele Oniosun');
     }
 
-    /**
-     * @throws Exception
-     */
-    public function test_can_get_account_transactions()
-    {
-        $this->transactionManager->deposit(1000, $this->account->getAccountNumber());
-        $this->transactionManager->deposit(3000, $this->account->getAccountNumber());
-        $this->transactionManager->deposit(4000, $this->account->getAccountNumber());
-
-        $transactions = $this->transactionManager->getAccountTransactions($this->account);
-
-        $this->assertGreaterThan(0, $transactions);
-    }
 
     /**
      * @throws Exception
@@ -69,20 +59,19 @@ final class LedgerTest extends TestCase
     public function simulateAccountTransactions()
     {
         // create deposits
-        $this->transactionManager->deposit(4000, $this->account->getAccountNumber());
-        $this->transactionManager->deposit(5000, $this->account->getAccountNumber());
-        $this->transactionManager->deposit(6000, $this->account->getAccountNumber());
+        $this->transactionManager->execute(DepositService::class, 4000, $this->account);
+        $this->transactionManager->execute(DepositService::class, 5000, $this->account);
+        $this->transactionManager->execute(DepositService::class, 6000, $this->account);
         sleep(1); // This is to ensure that all transactions does not have the same due date
 
         // create withdrawals
-        $this->transactionManager->withdraw(2000, $this->account->getAccountNumber());
-        $this->transactionManager->withdraw(1000, $this->account->getAccountNumber());
+        $this->transactionManager->execute(WithdrawalService::class, 2000, $this->account);
+        $this->transactionManager->execute(WithdrawalService::class, 1000, $this->account);
         sleep(1);
 
         // create transfers
-        $this->transactionManager->transfer(2000, $this->account->getAccountNumber(), $this->recipient->getAccountNumber());
-        $this->transactionManager->transfer(2000, $this->account->getAccountNumber(), $this->recipient->getAccountNumber());
-        $this->transactionManager->transfer(500, $this->recipient->getAccountNumber(), $this->account->getAccountNumber());
+        $this->transactionManager->execute(TransferService::class, 2000, $this->account, $this->recipient);
+        $this->transactionManager->execute(TransferService::class, 2000, $this->account, $this->recipient);
     }
 
     /**

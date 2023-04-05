@@ -5,44 +5,22 @@ namespace Financial\Transactions\Tests;
 use Exception;
 use Financial\Transactions\Account;
 use Financial\Transactions\Enums\TransactionEnum;
-use Financial\Transactions\TransactionManager;
+use Financial\Transactions\services\TransferService;
 use PHPUnit\Framework\TestCase;
 
 final class TransferTest extends TestCase
 {
-    protected TransactionManager $transactionManager;
+    protected TransferService $transferService;
     protected Account $accountManager;
     protected Account $account;
     protected Account $recipient;
 
     public function setUp(): void
     {
-        $this->transactionManager = new TransactionManager();
+        $this->transferService = new TransferService();
         $this->accountManager = Account::getInstance();
         $this->account = $this->accountManager->createAccount('Nameless User');
         $this->recipient = $this->accountManager->createAccount('Ayodele Oniosun');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test_cannot_transfer_from_and_to_invalid_accounts()
-    {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Invalid account number.");
-
-        $this->transactionManager->transfer(1000, 11111, 11111);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test_cannot_transfer_from_and_to_non_existing_accounts()
-    {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Account does not exist.");
-
-        $this->transactionManager->transfer(1000, 12345678911, 12345678911);
     }
 
     /**
@@ -53,7 +31,7 @@ final class TransferTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("You cannot transfer funds to yourself.");
 
-        $this->transactionManager->transfer(1000, $this->account->getAccountNumber(), $this->account->getAccountNumber());
+        $this->transferService::handler(1000, $this->account, $this->account);
     }
 
     /**
@@ -64,7 +42,7 @@ final class TransferTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Invalid amount. Try again");
 
-        $this->transactionManager->transfer(0, $this->account->getAccountNumber(), $this->recipient->getAccountNumber());
+        $this->transferService::handler(0, $this->account, $this->recipient);
     }
 
     /**
@@ -74,7 +52,7 @@ final class TransferTest extends TestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Insufficient fund");
-        $this->transactionManager->transfer(1000, $this->account->getAccountNumber(), $this->recipient->getAccountNumber());
+        $this->transferService::handler(1000, $this->account, $this->recipient);
     }
 
     /**
@@ -82,10 +60,10 @@ final class TransferTest extends TestCase
      */
     public function test_can_transfer()
     {
-        $this->transactionManager->deposit(3000, $this->account->getAccountNumber());
-        $this->transactionManager->deposit(1000, $this->recipient->getAccountNumber());
+        $this->account->setAccountBalance(3000);
+        $this->recipient->setAccountBalance(1000);
 
-        $transfer = $this->transactionManager->transfer(1000, $this->account->getAccountNumber(), $this->recipient->getAccountNumber());
+        $transfer = $this->transferService::handler(1000, $this->account, $this->recipient);
 
         $this->assertEquals(1000, $transfer->amount);
         $this->assertEquals(TransactionEnum::TRANSFER, $transfer->type);
