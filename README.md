@@ -48,7 +48,15 @@ It handles everything related to account management:
 - Get user account balance.
 - Get all accounts.
 
-`TransactionManager`: This class handles all the transaction operations - deposits, withdrawals and transfers.
+`TransactionManager`: This class serves as a base class for all validation checks in transaction operations services -
+deposits, withdrawals and
+transfers.
+
+`DepositService`: This class contains the logic for deposit operation.
+
+`WithdrawalService`: This class contains the logic for withdrawal operation.
+
+`TransferService`: This class contains the logic for transfer operation.
 
 `Ledger`: This class handles the retrieval of different types of transactions - deposits, withdrawals and transfers, as
 well as the sorting for transactions by due date and comments both in ascending and
@@ -57,8 +65,13 @@ descending order.
 `TestApp` class manually tests all the above mentioned features, although tests were written to automate
 that.
 
-GRASP principles such as `information expert` is used to assign responsibility to the class that has the information
-needed to fulfill it, as each class does one major thing and not a myriad of unrelated operations.
+SOLID principle was made use of in the following ways:
+
+1. Ensuring that each class is cohesive and does only closely related things and not a myriad of unrelated operations -
+   Single Responsibility.
+2. Implementation of services for each transaction operation and additional transaction operation can be added in the
+   future without touching the `TransactionManager` class - Open for extension, Close for Modification.
+3. Usage of Interfaces and its implementation in each transaction service class - Interface Segregation.
 
 ### Installation guides
 
